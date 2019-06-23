@@ -5,17 +5,14 @@ EIRL Marc Sibert
 
 SIRET : 79049427200020
 
-6 allée de l’Orge 
-
+6 allée de l’Orge  
 91390 Morsang-sur-Orge
 
 Tél. : 0632205550
 
 ## Client
-Médiathèque Marie Curie / Coeur d'Essonne Agglomération
-
-Place Marcel Carné
-
+Médiathèque Marie Curie / Coeur d'Essonne Agglomération  
+Place Marcel Carné  
 91240 Saint-Michel-sur-Orge 
 
 Tél : 01 69 72 84 60
@@ -35,6 +32,7 @@ sans qu'il ne soit nécessaire d'organiser des rencontres physiques ; ces échan
 pourront se faire par messagerie électronique. 
 
 Les activités de ces 8 1/2 journées seront réparties comme suit :
+
 * 4 demi-journées préparatoires permettant la réalisation du robot ;
 * les 4 demi-journées suivantes se dérouleront dans les locaux de la Médiathèque 
 Marie-Curie (St-Michel-sur-Orge) et permettront aux participants de programmer 
@@ -70,11 +68,11 @@ La prestation telle que définie précédemment est établie pour un montant
 forfaiaire de 1000 €.
 
 TVA non applicable, article 293 B CGI.
-
-
-
+  
+  
+  
 Fait, le 24/06/2019 à Morsang sur Orge
-
-
-
+  
+  
+  
 Marc Sibert
