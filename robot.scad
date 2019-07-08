@@ -1,7 +1,7 @@
 // %cube([600,124.3,5],center=true);
 
 
-*difference() {
+difference() {
 // Base    
     cube([500,300,5],center=true);
 // Suppression angles avant
