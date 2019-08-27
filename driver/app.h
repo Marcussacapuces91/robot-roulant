@@ -18,6 +18,8 @@
 
 #include "timer.h"
 
+static const auto ECH = 50;
+
 class App {
 public:
 
@@ -29,7 +31,7 @@ public:
 // Moteur B (D11, D8 & *D9* = OCR1A)
     pinMode(11, OUTPUT);
     pinMode(8, OUTPUT);
-
+    
     setupAngularSensor();
   }
 
@@ -39,7 +41,7 @@ public:
     if (!f) return;
     f = false;
 
-    const int s = round(sin((i * 2 * PI) / 32768.0) * 512.0);
+    const int s = round(sin((i * 2 * PI) / 2048.0) * 511);
 
     Serial.print(i++);
     Serial.print(',');
@@ -61,23 +63,13 @@ public:
   }
   
   inline
-  static void isrA() {
-    static unsigned d = 0;
-    if (d > 0) { 
-      --d; 
-    } else { 
-      d = 62745/20; // 2 * 16000000 / 510 / 50
-      f = true;
-    };
-  }
-
-  inline
   static void isr() {
     static volatile unsigned d = 0;
     if (d > 0) { 
       --d;
     } else { 
-      d = 31250; // 16000000 / (511+1) / 25; // 16000000 / (511+1) / 25 = 1250
+//      d = 1250; // 16000000 / (511+1) / 25; // 16000000 / (511+1) / 25 = 1250
+      d = 16000000 / (511+1) / ECH; 
       f = true;
     };
   }
@@ -87,10 +79,7 @@ public:
 protected:
 
   void setupTimer() {
-    timer.setValueA(0);
-    timer.setValueB(0);
-    pinMode(timer.PIN_A, OUTPUT);
-    pinMode(timer.PIN_B, OUTPUT);
+    timer.begin();
   }
 
   void setupAngularSensor() {
