@@ -20,7 +20,7 @@ App app;
 
 void setup() {
   Serial.begin(2000000);
-  while (!Serial) ;
+//  while (!Serial) ;
 
   app.setup();  
 }
