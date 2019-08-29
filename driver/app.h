@@ -32,20 +32,32 @@ public:
     pinMode(11, OUTPUT);
     pinMode(8, OUTPUT);
     
-    setupAngularSensor();
+    pinMode(A0, INPUT);
+    pinMode(A1, INPUT);
+    PCICR |= _BV(PCIE1);  // Pin Change Interrupt Enable 1
+    PCMSK1 |= _BV(PCINT9) | _BV(PCINT8);  // enable PC1 & PC0    
   }
 
   void loop() {
     static unsigned i = 0;
+    static unsigned p = 0;
     
     if (!f) return;
     f = false;
 
-    const int s = round(sin((i * 2 * PI) / 2048.0) * 511);
+    const int s = round(sin((i * 2 * PI) / 512.0) * 300);
+    const int steps = long(App::posA) - p;
+    p = App::posA;
 
-    Serial.print(i++);
+    Serial.print(++i);
     Serial.print(',');
     Serial.print(s);
+    Serial.print(',');
+    Serial.print( steps );
+    Serial.print(',');
+    Serial.print(App::posB);
+
+    
     Serial.println();
         
     if (s > 0) {
@@ -63,18 +75,39 @@ public:
   }
   
   inline
-  static void isr() {
+  static void intTimer() {
+    cli();
     static volatile unsigned d = 0;
-    if (d > 0) { 
+    if (d > 0) {
       --d;
-    } else { 
-//      d = 1250; // 16000000 / (511+1) / 25; // 16000000 / (511+1) / 25 = 1250
-      d = 16000000 / (511+1) / ECH; 
+    } else {
+      d = 16000000 / (511+1) / ECH;
       f = true;
     };
+    sei();
+  }
+
+  static void intPortC() {
+    static byte pC;
+
+    cli();
+    const auto c = PINC;
+    const auto dif = pC ^ c;
+
+    if (dif & _BV(0)) {
+      if (bool(c & _BV(0)) == bool(c & _BV(1))) ++posA; else --posA;
+    }
+    if (dif & _BV(1)) {
+      if (bool(c & _BV(0)) == bool(c & _BV(1))) --posA; else ++posA;
+    }
+
+    pC = c;
+    sei();
   }
 
   static volatile bool f;
+  static volatile unsigned posA;
+  static volatile unsigned posB;
 
 protected:
 
@@ -82,9 +115,6 @@ protected:
     timer.begin();
   }
 
-  void setupAngularSensor() {
-    
-  }
   
 private:
 //  static volatile bool f;
@@ -93,6 +123,8 @@ private:
 
 
 volatile bool App::f = false;
+volatile unsigned App::posA = 0;
+volatile unsigned App::posB = 0;
 
 /*
 ISR (TIMER0_COMPA_vect) {
@@ -105,7 +137,9 @@ ISR (TIMER0_COMPB_vect) {
 */
 
 ISR(TIMER1_OVF_vect) {
-  cli();
-  App::isr();
-  sei();
+  App::intTimer();
+}
+
+ISR(PCINT1_vect) {
+  App::intPortC();
 }
