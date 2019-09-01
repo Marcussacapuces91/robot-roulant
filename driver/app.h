@@ -17,6 +17,7 @@
 #pragma once 
 
 #include "timer.h"
+#include "pid.h"
 
 static const auto ECH = 50;
 
@@ -39,45 +40,50 @@ public:
   }
 
   void loop() {
-    static unsigned i = 0;
-    static unsigned p = 0;
+    static int i = 0;
+    static int p = 0;
     
     if (!f) return;
     f = false;
 
-    const int s = round(sin((i * 2 * PI) / 512.0) * 300);
     const int steps = long(App::posA) - p;
     p = App::posA;
 
-    Serial.print(++i);
-    Serial.print(',');
-    Serial.print(s);
-    Serial.print(',');
-    Serial.print( steps );
-    Serial.print(',');
-    Serial.print(App::posB);
+    const auto Kp = 10.0;
+    const auto Ti = 0.0;
+    const auto Td = 0.0;
 
+    static PID<float> pidA(Kp, Ti, Td);
+    static PID<float> pidB(Kp, Ti, Td);
     
-    Serial.println();
+    ++i;
+    const auto consigne = round(sin((i * 2 * PI) / 512) * 100);
+    const auto mesure = steps;
+    const auto error = consigne - mesure;
+
+    float output = pidA.run(error);
+      
+// Traitement de la zone morte
+/*
+    if ((output > 0) && (output < 200)) output = 200;
+    if ((output < 0) && (output > -200)) output = -200;
+*/
         
-    if (s > 0) {
-      digitalWrite(13, LOW);
-      digitalWrite(12, HIGH);
-      timer.setValueB(s);  
-    } else if (s < 0) {
-      digitalWrite(13, HIGH);
-      digitalWrite(12, LOW);
-      timer.setValueB(-s);  
-    } else {
-      digitalWrite(13, LOW);
-      digitalWrite(12, LOW);
-    }
+    setMotorA(output > 511 ? 511 : (output < -511 ? -511 : output));
+//    setMotorB(s);
+
+    Serial.print(consigne);
+    Serial.print(',');
+    Serial.print(mesure);
+    Serial.print(',');
+    Serial.print(output);
+    Serial.println();
   }
   
   inline
   static void intTimer() {
     cli();
-    static volatile unsigned d = 0;
+    static volatile uint16_t d = 0;
     if (d > 0) {
       --d;
     } else {
@@ -106,8 +112,8 @@ public:
   }
 
   static volatile bool f;
-  static volatile unsigned posA;
-  static volatile unsigned posB;
+  static volatile uint16_t posA;
+  static volatile uint16_t posB;
 
 protected:
 
@@ -115,6 +121,35 @@ protected:
     timer.begin();
   }
 
+  void setMotorA(const int s) {
+    if (s > 0) {
+      digitalWrite(13, LOW);
+      digitalWrite(12, HIGH);
+      timer.setValueB(s);  
+    } else if (s < 0) {
+      digitalWrite(13, HIGH);
+      digitalWrite(12, LOW);
+      timer.setValueB(-s);  
+    } else {
+      digitalWrite(13, LOW);
+      digitalWrite(12, LOW);
+    }
+  }
+
+  void setMotorB(const int s) {
+    if (s > 0) {
+      digitalWrite(8, LOW);
+      digitalWrite(11, HIGH);
+      timer.setValueA(s);  
+    } else if (s < 0) {
+      digitalWrite(8, HIGH);
+      digitalWrite(11, LOW);
+      timer.setValueA(-s);  
+    } else {
+      digitalWrite(8, LOW);
+      digitalWrite(11, LOW);
+    }
+  }
   
 private:
 //  static volatile bool f;
@@ -123,8 +158,8 @@ private:
 
 
 volatile bool App::f = false;
-volatile unsigned App::posA = 0;
-volatile unsigned App::posB = 0;
+volatile uint16_t App::posA = 0;
+volatile uint16_t App::posB = 0;
 
 /*
 ISR (TIMER0_COMPA_vect) {
