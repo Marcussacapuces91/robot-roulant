@@ -56,8 +56,8 @@ module barres(ep = 50) {
 }
 
 module US(ep=50) {
-translate([0,0,-ep/2]) cube([21,45.5,ep],center=true);
-for (i=[-1,1]) translate([0,i*12.77,5.75]) cylinder(d=16,h=12.5,$fn=50,center=true);
+translate([0,0,-ep/2]) cube([21.5,45.5,ep],center=true);
+for (i=[-1,1]) translate([0,i*12.77,5.75]) cylinder(d=16.5,h=12.5,$fn=50,center=true);
 for (x=[-8,8]) hull() for(y=[-3,3]) translate([x,y,3.5/2]) cylinder(d=5,h=4,$fn=20,center=true);
 }
 
