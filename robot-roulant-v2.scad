@@ -41,7 +41,7 @@ module barres(ep = 50) {
 // Rainure haute (leds)
     translate([81.86-5,i*94+i*5,12.5]) rotate([0,0,i*45]) cube([20,140,20],center=true);
 // Avants trous        
-        for(y=[-45,45]) rotate([0,0,45]) translate([125,15+y,0]) cylinder(d=3,h=ep+2,$fn=10,center=true);
+        for(y=[-45,45]) rotate([0,0,i*45]) translate([125,i*(15+y),0]) cylinder(d=3,h=ep+2,$fn=10,center=true);
     }
     
 // Barres côtés et arrière
