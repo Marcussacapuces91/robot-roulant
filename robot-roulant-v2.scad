@@ -23,11 +23,11 @@ module barres(ep = 50) {
         for (i=[-1,1]) rotate([0,0,i*45/2]) translate([130,i*17.51,0]) cube([30,20,ep+2],center=true);
 // Emplacement US
         translate([118.1,0,-14.5+2]) rotate([0,90,0]) US();
-// Avants trous        
-        for(y=[-50,50]) translate([120,y,-15]) cylinder(d=3,h=21,$fn=10,center=true);
+// Rainure haute (leds)
+    translate([118,0,12.5]) cube([20,128,20],center=true);
+// Avant-trous        
+        for(y=[-50,50]) translate([120,y,0]) cylinder(d=3,h=ep+2,$fn=10,center=true);
     }
-
-    *for(y=[-50,50]) translate([120,y,-30]) cylinder(d=0.5,h=20,center=true);
 
 // Barres gauche et droite
     for (i=[-1,1]) difference() {
@@ -38,8 +38,10 @@ module barres(ep = 50) {
         rotate([0,0,i*45/2]) translate([130,i*(17.51-20),0]) cube([30,20,ep+2],center=true);
 // Emplacement US
         translate([85.1,i*90,-14.5+2]) rotate([0,90,i*45]) US(20);
+// Rainure haute (leds)
+    translate([81.86-5,i*94+i*5,12.5]) rotate([0,0,i*45]) cube([20,140,20],center=true);
 // Avants trous        
-        for(y=[-45,45]) rotate([0,0,45]) translate([125,15+y,-15]) cylinder(d=3,h=21,$fn=10,center=true);
+        for(y=[-45,45]) rotate([0,0,45]) translate([125,15+y,0]) cylinder(d=3,h=ep+2,$fn=10,center=true);
     }
     
 // Barres côtés et arrière
