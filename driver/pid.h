@@ -24,7 +24,7 @@ public:
 
   T run(const T& aError) {
     const auto prop = aError * Kp;
-    inte += prop / Ti;
+    inte += Ti * prop;
     const auto deri = Td * (oldProp - prop);
     oldProp = prop;
 

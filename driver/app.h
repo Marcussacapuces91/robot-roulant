@@ -36,32 +36,35 @@ public:
     pinMode(A0, INPUT);
     pinMode(A1, INPUT);
     PCICR |= _BV(PCIE1);  // Pin Change Interrupt Enable 1
-    PCMSK1 |= _BV(PCINT9) | _BV(PCINT8);  // enable PC1 & PC0    
+    PCMSK1 |= _BV(PCINT9) | _BV(PCINT8) | _BV(PCINT11) | _BV(PCINT10) ;
   }
 
   void loop() {
-    static int i = 0;
-    static int p = 0;
-    
-    if (!f) return;
-    f = false;
-
-    const int steps = long(App::posA) - p;
-    p = App::posA;
-
-    const auto Kp = 10.0;
+    const auto Kp = 20.0;
     const auto Ti = 0.0;
     const auto Td = 0.0;
 
     static PID<float> pidA(Kp, Ti, Td);
     static PID<float> pidB(Kp, Ti, Td);
+
+    static int i = 0;
+    static int pA = 0;
+    static int pB = 0;
+    
+    if (!f) return;
+    f = false;
+
+    const int stepsA = long(App::posA) - pA;
+    pA = App::posA;
+    
+    const int stepsB = long(App::posB) - pB;
+    pB = App::posB;
     
     ++i;
     const auto consigne = round(sin((i * 2 * PI) / 512) * 100);
-    const auto mesure = steps;
-    const auto error = consigne - mesure;
 
-    float output = pidA.run(error);
+    float outputA = pidA.run(consigne - stepsA);
+    float outputB = pidB.run(consigne - stepsB);
       
 // Traitement de la zone morte
 /*
@@ -69,14 +72,18 @@ public:
     if ((output < 0) && (output > -200)) output = -200;
 */
         
-    setMotorA(output > 511 ? 511 : (output < -511 ? -511 : output));
-//    setMotorB(s);
+    setMotorA(outputA > 511 ? 511 : (outputA < -511 ? -511 : outputA));
+    setMotorB(outputB > 511 ? 511 : (outputB < -511 ? -511 : outputB));
 
     Serial.print(consigne);
     Serial.print(',');
-    Serial.print(mesure);
+    Serial.print(consigne - stepsA);
     Serial.print(',');
-    Serial.print(output);
+    Serial.print(consigne - stepsB);
+    Serial.print(',');
+    Serial.print(outputA);
+    Serial.print(',');
+    Serial.print(outputB);
     Serial.println();
   }
   
@@ -105,6 +112,12 @@ public:
     }
     if (dif & _BV(1)) {
       if (bool(c & _BV(0)) == bool(c & _BV(1))) --posA; else ++posA;
+    }
+    if (dif & _BV(2)) {
+      if (bool(c & _BV(2)) == bool(c & _BV(3))) ++posB; else --posB;
+    }
+    if (dif & _BV(3)) {
+      if (bool(c & _BV(2)) == bool(c & _BV(3))) --posB; else ++posB;
     }
 
     pC = c;
@@ -140,11 +153,11 @@ protected:
     if (s > 0) {
       digitalWrite(8, LOW);
       digitalWrite(11, HIGH);
-      timer.setValueA(s);  
+      timer.setValueB(s);  
     } else if (s < 0) {
       digitalWrite(8, HIGH);
       digitalWrite(11, LOW);
-      timer.setValueA(-s);  
+      timer.setValueB(-s);  
     } else {
       digitalWrite(8, LOW);
       digitalWrite(11, LOW);
