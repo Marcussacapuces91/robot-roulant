@@ -72,13 +72,30 @@ for (i=[-1,1]) translate([0,i*12.77,5.75]) cylinder(d=16.5,h=12.5,$fn=50,center=
 for (x=[-8,8]) hull() for(y=[-3,3]) translate([x,y,3.5/2]) cylinder(d=5,h=4,$fn=20,center=true);
 }
 
-translate([0,0,-4.5]) color("brown") plaqueDessous();
+*translate([0,0,-4.5]) color("brown") plaqueDessous();
 
 // Roues avant
-for (y=[-140,140]) translate([0,y,20]) rotate([90,0,0]) cylinder(d=67,h=25,center=true);
+*for (y=[-140,140]) translate([0,y,20]) rotate([90,0,0]) cylinder(d=67,h=25,center=true);
 
 // Epaisseur latérale 50mm
-translate([0,0,25]) color("white") barres(50);
+*translate([0,0,25]) color("white") barres(50);
 
 // Plaque dessus
-translate([0,0, 59-4.5]) rotate([180,0,0]) plaqueDessous();
+*translate([0,0, 59-4.5]) rotate([180,0,0]) plaqueDessous();
+
+
+module cloche(h=35) {
+    difference() {
+        cube([82,82,h+1],center=true);
+        translate([0,0,-2.5]) cylinder(r=40,h=h+2,$fn=50,center=true);
+        translate([0,0,h/2-3]) cube([40,50,5],center=true);
+        for (x=[-27.5/2,27.5/2],y=[-36.5/2,36.5/2]) {
+            translate([x,y,h/2]) cylinder(d=5,h=5,$fn=20,center=true);
+        }
+        for (d=24,x=[-d*sqrt(2),d*sqrt(2)],y=[-d*sqrt(2),d*sqrt(2)]) {
+            translate([x,y,-h/2]) cylinder(d=3,h=20,$fn=20,center=true);
+        }
+    }
+}
+
+rotate([180,0,0]) cloche();
