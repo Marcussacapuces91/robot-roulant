@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Atelier robot-roulant - Matinée de présentation</title>
+    <meta charset="utf-8">
+
+    <style>
+
+		body { 
+/*			background-image: /* rgba(0, 0, 0, 0.5), */ url("background.png");  */
+		}
+		
+// 2 colonnes dans le contenu
+		.pull-left {
+			float: left;
+			width: 47%;
+		}
+		
+		.pull-right {
+			float: right;
+			width: 47%;
+		}
+		
+		.pull-right ~ p {
+			clear: both;
+		}	
+
+/* Two-column layout */
+		.left-column {
+			color: #777;
+			width: 20%;
+			height: 92%;
+			float: left;
+		}
+		
+		.left-column h2:last-of-type, .left-column h3:last-child {
+			color: #fff;
+		}
+		
+		.right-column {
+			width: 75%;
+			float: right;
+			padding-top: 1em;
+		}    
+		
+		.remark-slide-content { 
+			background-image: url("background.png"); 
+			color: #ff8; 
+		}
+		
+	</style>
+
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+name: Introduction
+class: center, middle
+
+# Atelier Robot Roulant
+Matinée de présentation
+
+---
+.left-column[
+## Organisation
+]
+.right-column[
+
+<table>
+<tr>
+<th markdown="true">
+### Organisateur
+Malek Dhoukar
+</th>
+</tr>
+</table>
+
+**Médiathèque Marie Curie**
+Place Marcel Carné</br>
+91240 Saint-Michel-sur-Orge
+Tél : <a href="tel:+33 (0) 1 69 72 84 60">01 69 72 84 60</a>
+]
+
+.pull-right[
+Tuteur
+<dl>
+  <dt>Marc Sibert : </dt>
+  <dd>
+    **Fablab Lab'Allen**   <br/>
+    *La Piscine-d'en-Face*<br/>
+    14 rue Léo Lagrange<br/>
+    91700 Sainte-Geneviève-des-Bois<br/>
+    mail : contact@lab-allen.fr
+  </dd>
+</dl>  
+]
+
+]
+
+
+---
+### Fablab, qu'est-ce c'est ?
+
+#### *Fab*rication & *Lab*oratoire ![](logoFabLab.png)
+
+Le concept de fab lab a été pensé par Neil Gershenfeld, physicien et informaticien, professeur au sein du MIT, à la fin des années 1990, sur base de ses observations faites au sein de hackerspaces se transformant en makerspace pour répondre aux besoins des communautés créées (par exemple le C-base de Berlin, fondé en 1995).<br/>
+(*source Wikipédia*)
+
+---
+### Fablab, qu'est-ce c'est ?
+
+#### Licences libres
+
+En droit français, le droit d'auteur est inaliénable, mais dans d'autres pays, il peut être transmissible.
+
+Une licence, c'est un contrat qui accompagne une oeuvre, une production de l'esprit, du code informatique, une base de données (toute production originale de l'esprit humain).
+
+Il y 2 grandes familles de licences :
+- licences fermées (copyright) : permettant dans des cas limités la copie ou la réutilisation de l'oeuvre ;
+- licence ouvertes : favorisant le partage voir la modification des oeuvres, mais avec certaines contraintes.
+
+Dans les licences libres, il existent plusieurs modèles rédigés par les groupes différents comme la *Free Software Foundation* pour la licence GPL (Linux) ou les *Creative Commons* ; il en existe d'autres.
+
+---
+En général, ces licences permettent à l'auteur de diffuser son oeuvre (code informatique) librement. Souvent et selon la licence choisie, l'auteur peut limiter la réutilisation, la modification, imposer la publification du code modifié, interdire la revente du logiciel...
+
+La charte des FabLab, que j'ai choisie de suivre, impose de documenter tout travail et de le partager.
+
+    Who owns fab lab inventions?
+
+    Designs and processes developed in fab labs can be
+    protected and sold however an inventor chooses, but should
+    remain available for individuals to use and learn from
+
+(*source http://fab.cba.mit.edu/about/charter/ *)
+
+Tout le code informatique produit ici, sera... le vôtre ! Et sera placé sous la licence Apache v2.
+
+Les caractéristiques majeures de la licence Apache sont, d'une part, d'autoriser la modification et la distribution du code sous toute forme (libre ou propriétaire, gratuit ou commercial) et, d'autre part, d'obliger le maintien du copyright lors de toute modification (et également du texte de la licence elle-même).<br/>
+(*source Wikipédia*)
+
+### Dates & heures des ateliers
+
+#### Horaires
+- L'introduction (aujourd'hui) 2h de 10h à 12h ;
+- Les ateliers sont en 1/2 journées le samedi matin de 9h à 12h ;
+- La restitution 2h30 de 9h30 à 12h.
+
+#### Agenda
+- 2/11 : Introduction ;
+- 9/11 : Atelier 1/3 ;
+- 16/11 : Atelier 2/3 ;
+- 23/11 : Atelier 3/3 ;
+- 30/11 : Restitution.
+
+### Fonctionnement des groupes
+#### Règles de fonctionnement
+1. Se faire plaisir :-)
+2. Être collaboratif (comme dans la vraie vie)
+3. Documenter
+
+## Introduction à la thématique
+### Idéation du robot
+
+
+
+
+## Modules
+### Déplacement
+#### Présentation de la plateforme motorisée
+#### Logique du Déplacement
+#### Ordres et commandes
+
+### Reconnaissance faciale
+#### Caméra USB
+#### Librairie OpenCV
+#### Détection d'humain/enfant
+#### Reconnaissance de visage
+#### Transmission d'ordre au robot via images spécifiques
+
+### Synthèse vocale
+Afin de communiquer notre robot sera capable de parler, mais pas d'écouter.
+
+On va tester plusieurs solutions de synthèse vocale basées sur le principe TTS (*Text To Speach*).
+#### Utilisation de eSpeak
+C'est un outil qui assure la transformation d'un texte en phonèmes et qui permet la synthèse (de mauvaise qualité).
+
+#### Amélioration MBrola
+C'est un autre logiciel qui fonctionne avec le précédent. eSpeak qui assure toujours la transformation du texte en phonèmes mais MBrola assure la synthèse vocale de meilleure qualité.
+
+#### SVOX Pico TTS (?)
+#### Hack de l'ampli
+
+
+
+
+
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script>
+      var slideshow = remark.create({
+		ratio: '16:9',
+		slideNumberFormat: '%current% '
+	  });
+    </script>
+  </body>
+</html>
