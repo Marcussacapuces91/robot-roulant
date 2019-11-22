@@ -56,22 +56,21 @@ class Pipes:
                 pass
             
 if __name__ == "__main__":
-    modules = list()
+    modules = dict()
     with Pipes("/tmp/controle") as pipes:
         while True:
             r = pipes.readMessage()
             if r:
                 try:
-                    e = r['hello']
-                    modules.append(e);
+                    if (r['verbe'] == "hello"):
+                        modules[r['source']] = { 'path': r['path'] }
                 except KeyError:
                     print("Message ignoré (", end='')
                     print(r, end='')
                     print(") !")
-                    print("'{ \"hello\": nom de pipe de l'émetteur }' attendu !")
                     continue
                 
-                print(e)
+                print(modules)
                 
 #            else:
 #                break
