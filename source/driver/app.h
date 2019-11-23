@@ -21,25 +21,99 @@
 
 static const auto ECH = 50;
 
+
 class App {
 public:
 
   void setup() {
+    setupSensors();
+
     setupTimer();
+
+    timer.setValueA(511);  
+    timer.setValueB(511);  
+    
+    pinMode( 8, OUTPUT);
+    pinMode(11, OUTPUT);
+    pinMode(12, OUTPUT);
+    pinMode(13, OUTPUT);
+    
+    digitalWrite(8, HIGH);
+    delay(5000);
+    digitalWrite(8, LOW);
+    digitalWrite(11, HIGH);
+    delay(5000);
+    digitalWrite(11, LOW);
+    digitalWrite(12, HIGH);
+    delay(5000);
+    digitalWrite(12, LOW);
+    digitalWrite(13, HIGH);
+    delay(5000);
+    digitalWrite(13, LOW);
+
+/*    
+
+
+    pinMode( 8, OUTPUT);
+    pinMode(11, OUTPUT);
+    pinMode(12, OUTPUT);
+    pinMode(13, OUTPUT);
+
+    digitalWrite(13, HIGH);
+    delay(5000);
+    digitalWrite(13, LOW);
+*/
+
+
+
+/*
 // Moteur A (D13, D12 & *D10* = OCR1B)
     pinMode(12, OUTPUT);
     pinMode(13, OUTPUT);
-// Moteur B (D11, D8 & *D9* = OCR1A)
+// Moteur B (D11, D12 & *D9* = OCR1A)
     pinMode(11, OUTPUT);
     pinMode(8, OUTPUT);
-    
+
     pinMode(A0, INPUT);
     pinMode(A1, INPUT);
-    PCICR |= _BV(PCIE1);  // Pin Change Interrupt Enable 1
-    PCMSK1 |= _BV(PCINT9) | _BV(PCINT8) | _BV(PCINT11) | _BV(PCINT10) ;
+*/
   }
 
   void loop() {
+    static unsigned long d1[4];
+    static unsigned long d2[4];
+    static unsigned long d3[4];
+
+    d1[0] = d1[1];
+    d1[1] = d1[2];
+    d1[2] = d1[3];
+    d1[3] = App::d1;
+
+    d2[0] = d2[1];
+    d2[1] = d2[2];
+    d2[2] = d2[3];
+    d2[2] = App::d2;
+
+    d3[0] = d3[1];
+    d3[1] = d3[2];
+    d3[2] = d3[3];
+    d3[2] = App::d3;
+          
+    Serial.print(((d1[0] + d1[1] + d1[2] + d1[3]) * 87) / 2048);
+    Serial.print(',');
+    Serial.print(((d2[0] + d2[1] + d2[2] + d2[3]) * 87) / 2048);
+    Serial.print(',');
+    Serial.print(((d3[0] + d3[1] + d3[2] + d3[3]) * 87) / 2048);
+    Serial.println();
+
+    digitalWrite(A0, HIGH);
+    delayMicroseconds(10);    
+    digitalWrite(A0, LOW);
+    delay(5);
+  }
+  
+  void kk() {
+    
     const auto Kp = 20.0;
     const auto Ti = 0.0;
     const auto Td = 0.0;
@@ -101,6 +175,42 @@ public:
   }
 
   static void intPortC() {
+
+    static byte pC;
+    const auto c = PINC;
+    const auto dif = pC ^ c;
+
+    if (dif & _BV(1)) { // changement de ADC1
+      if (c & _BV(1)) { // HIGH
+        t1 = micros();
+      } else {          // LOW
+        d1 = micros() - t1;        
+      }
+    }
+
+    if (dif & _BV(2)) { // changement de ADC2
+      if (c & _BV(2)) { // HIGH
+        t2 = micros();
+      } else {          // LOW
+        d2 = micros() - t2;        
+      }
+    }
+
+    if (dif & _BV(3)) { // changement de ADC3
+      if (c & _BV(3)) { // HIGH
+        t3 = micros();
+      } else {          // LOW
+        d3 = micros() - t3;        
+      }
+    }
+
+    
+    pC = c;
+  }
+
+
+/*
+  static void intPortC() {
     static byte pC;
 
     cli();
@@ -123,6 +233,7 @@ public:
     pC = c;
     sei();
   }
+*/
 
   static volatile bool f;
   static volatile uint16_t posA;
@@ -163,16 +274,40 @@ protected:
       digitalWrite(11, LOW);
     }
   }
+
+  void setupSensors() {
+    pinMode(A0, OUTPUT);
+    pinMode(A1, INPUT_PULLUP);
+    pinMode(A2, INPUT_PULLUP);
+    pinMode(A3, INPUT_PULLUP);
+
+    PCICR |= _BV(PCIE1);  // Pin Change Interrupt Enable 1
+    PCMSK1 |= _BV(PCINT9) | _BV(PCINT9) | _BV(PCINT10) | _BV(PCINT11) ;
+  }
   
 private:
 //  static volatile bool f;
   Timer<TIMER_1> timer;
+
+  static volatile uint32_t t1;
+  static volatile uint32_t d1;
+  static volatile uint32_t t2;
+  static volatile uint32_t d2;
+  static volatile uint32_t t3;
+  static volatile uint32_t d3;
 };
 
 
 volatile bool App::f = false;
 volatile uint16_t App::posA = 0;
 volatile uint16_t App::posB = 0;
+
+volatile uint32_t App::t1;
+volatile uint32_t App::d1 = 0;
+volatile uint32_t App::t2;
+volatile uint32_t App::d2 = 0;
+volatile uint32_t App::t3;
+volatile uint32_t App::d3 = 0;
 
 /*
 ISR (TIMER0_COMPA_vect) {

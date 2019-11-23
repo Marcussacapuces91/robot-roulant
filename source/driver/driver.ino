@@ -21,6 +21,9 @@ App app;
 void setup() {
   Serial.begin(2000000);
 //  while (!Serial) ;
+  Serial.print(F("Hello! ")); Serial.print(__FILE__); Serial.println(F(" up!"));
+  Serial.print(F("Copyright 2019 M. SIBERT - "));
+  Serial.println(__DATE__);
 
   app.setup();  
 }
