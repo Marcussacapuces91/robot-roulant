@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import .pipes import Pipes 
+from pipes import Pipes 
 
 def main():
     modules = dict()
