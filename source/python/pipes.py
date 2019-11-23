@@ -71,3 +71,5 @@ class Pipes:
             except json.JSONDecodeError:       # json invalide
                 pass
             
+    def writeMessage(self,mes):
+        os.write(self._fifo,json.dumps(mes)) # on a transformé  l'objet "mes"  en chaine de caracteres au format json
