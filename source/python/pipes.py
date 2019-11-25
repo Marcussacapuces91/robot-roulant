@@ -18,40 +18,36 @@
 """
 
 import os
-import io
+#import io
 import json
 
 class Pipes:
     """
-    Définit et met en oeuvre la communication au travers de tubes nommés.
-    Peut s'utiliser avec "with".
+    C'est une classe abstraite qui met en oeuvre un tube nommé en lecture (seule).
+    Elle permet l'instanciation avec "with" et la lecture de messages arrivant sous la forme d'un objet.
+    Elle utilise une sérialisation JSON pour assurer l'échange des objets.
     """
+
+    _pathControler = "/tmp/controler"
 
     def __init__(self, path):
         self._mainPath = path
         
     def __enter__(self):
-        self._createPipe(self._mainPath)
-        self._fifo = os.open(self._mainPath, os.O_RDONLY | os.O_NONBLOCK)
+        try:
+            os.mkfifo(self._mainPath)
+            print("Tube créé ({})".format(self._mainPath))
+        except FileExistsError:
+            print("Tube déjà existant ({}).".format(self._mainPath))
+        finally:
+            self._fifo = os.open(self._mainPath, os.O_RDONLY | os.O_NONBLOCK)
+            
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         os.close(self._fifo)
-        self._deletePipe(self._mainPath)
-        
-    def getMainPath(self):
-        return self._mainPath
-
-    def _createPipe(self, path):
-        try:
-            os.mkfifo(path)
-            print("Tube créé ({})".format(path))
-        except FileExistsError:
-            print("Tube déjà existant ({}).".format(path))
-
-    def _deletePipe(self, path):
-        os.remove(path)
-        print("Tube supprimé ({}).".format(path))
+        os.remove(self._mainPath)
+        print("Tube supprimé ({}).".format(self._mainPath))
         
     def readMessage(self):
         s = bytearray()
@@ -70,6 +66,36 @@ class Pipes:
             
             except json.JSONDecodeError:       # json invalide
                 pass
+
+    def writeMessage(self, path, mes):
+        ctrl = os.open(path, os.O_WRONLY | os.O_NONBLOCK)
+        os.write(ctrl, bytearray(json.dumps(mes), 'utf-8'))
+        os.close(ctrl)
+
             
-    def writeMessage(self,mes):
-        os.write(self._fifo,json.dumps(mes)) # on a transformé  l'objet "mes"  en chaine de caracteres au format json
+class PipesControl(Pipes):
+    """
+    C'est la classe concrête destinée au Contrôleur.
+    Elle instancie un tube nommé sur lequel le contrôleur lit les messages transmis par les modules.
+    Elle permet de transmettre des messages à chacun des modules.
+    Chaque module doit s'identifié lors de son démarrage pour être reconnu par contrôleur.
+    """
+    
+    def __init__(self):
+        super().__init__("/tmp/control")
+
+
+class PipesModule(Pipes):
+    """
+    C'est la classe concrête destinée aux différents modules.
+    Elle instancie un tube nommé sur lequel le module lit les messages transmis par le contrôleur.
+    Elle permet de transmettre des messages au contrôleur.
+    Le module s'identifie lors de son démarrage pour être reconnu par contrôleur.
+    """
+
+    def __init__(self, name):
+        self._moduleName = name
+        super().__init__("/tmp/{}".format(name))
+        
+    def record(self):
+        self.writeMessage('/tmp/control', { 'verbe': 'hello', 'source': self._moduleName, 'path': self._mainPath } )

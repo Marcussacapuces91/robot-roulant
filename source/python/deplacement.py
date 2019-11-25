@@ -2,25 +2,14 @@
 # -*- coding: utf-8 -*-
 
 
-from pipes import Pipes
+from pipes import PipesModule
 
             
 if __name__ == "__main__":
-    modules = dict()
-    with Pipes("/tmp/controle") as pipes:
+    with PipesModule("deplacement") as pipes:
+        pipes.record()
         while True:
-            r = pipes.readMessage()
-            if r:
-                try:
-                    if (r['verbe'] == "hello"):
-                        modules[r['source']] = { 'path': r['path'] }
-                except KeyError:
-                    print("Message ignoré (", end='')
-                    print(r, end='')
-                    print(") !")
-                    continue
-                
-                print(modules)
-                
-#            else:
-#                break
+            obj = pipes.readMessage()
+            if obj:
+                print(obj)
+        
