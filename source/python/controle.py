@@ -2,7 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from pipes import PipesControl
-import subprocess
+#import subprocess
+
+def stopAll(pipes, modules):
+    for k, m in modules.items():
+        print("Commande d'arrêt du module {}".format(m))
+        pipes.writeMessage(m['path'], { 'source': 'controle', 'verbe': 'fin' })
 
 def main():
     modules = dict()
@@ -16,7 +21,6 @@ def main():
                         modules[r['source']] = { 'path': r['path'] }
                         print("Enregistrement du module {} avec le tube nommé {}.".format(r['source'], r['path']))
                         break
-#                        pipes
                         
                 except KeyError:
                     print("Message ignoré (", end='')
@@ -24,11 +28,10 @@ def main():
                     print(") !")
                     continue
 
-        for k, m in modules.items():
-            print(m)
-            pipes.writeMessage(m['path'], { 'source': 'controle', 'verbe': 'fin' })
-            
+        stopAll(pipes, modules)            
 
 if __name__ == "__main__":
     
+    print("Démarrage de Controle")
     main()
+    print("Arrêt de Contrôle")
