@@ -4,6 +4,9 @@
 
 from pipes import PipesModule
 
+def finir():
+    print("Ordre d'arrêt du module !")
+    exit(0)
             
 if __name__ == "__main__":
     with PipesModule("deplacement") as pipes:
@@ -12,4 +15,8 @@ if __name__ == "__main__":
             obj = pipes.readMessage()
             if obj:
                 print(obj)
-        
+                switcher = {
+                    'fin': finir,
+                    'avancer': avancer
+                }[obj['verbe']]()
+                        

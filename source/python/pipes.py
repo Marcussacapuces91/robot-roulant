@@ -20,6 +20,7 @@
 import os
 #import io
 import json
+import time
 
 class Pipes:
     """
@@ -28,7 +29,7 @@ class Pipes:
     Elle utilise une sérialisation JSON pour assurer l'échange des objets.
     """
 
-    _pathControler = "/tmp/controler"
+#    _pathControler = "/tmp/controler"
 
     def __init__(self, path):
         self._mainPath = path
@@ -68,9 +69,17 @@ class Pipes:
                 pass
 
     def writeMessage(self, path, mes):
-        ctrl = os.open(path, os.O_WRONLY | os.O_NONBLOCK)
-        os.write(ctrl, bytearray(json.dumps(mes), 'utf-8'))
-        os.close(ctrl)
+        for i in range(0, 6): 
+            try:
+                ctrl = os.open(path, os.O_WRONLY | os.O_NONBLOCK)
+                os.write(ctrl, bytearray(json.dumps(mes), 'utf-8'))
+                os.close(ctrl)
+                return
+            except FileNotFoundError:
+                print("Attention ! Tube nommé {} introuvable, réessai {}".format(path, i))
+                time.sleep(10);
+                continue                
+        
 
             
 class PipesControl(Pipes):
@@ -98,4 +107,8 @@ class PipesModule(Pipes):
         super().__init__("/tmp/{}".format(name))
         
     def record(self):
+        print("Enregistrement de {} auprès de /tmp/control".format(self._moduleName));
         self.writeMessage('/tmp/control', { 'verbe': 'hello', 'source': self._moduleName, 'path': self._mainPath } )
+
+if __name__ == "__main__":
+    raise RuntimeError("Ne pas exécuter cette classe !")
