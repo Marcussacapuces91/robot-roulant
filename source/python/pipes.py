@@ -21,6 +21,7 @@ import os
 #import io
 import json
 import time
+import logging
 
 class Pipes:
     """
@@ -37,9 +38,9 @@ class Pipes:
     def __enter__(self):
         try:
             os.mkfifo(self._mainPath)
-            print("Tube créé ({})".format(self._mainPath))
+            logging.debug("Tube créé ({})".format(self._mainPath))
         except FileExistsError:
-            print("Tube déjà existant ({}).".format(self._mainPath))
+            logging.warning("Tube déjà existant ({}).".format(self._mainPath))
         finally:
             self._fifo = os.open(self._mainPath, os.O_RDONLY | os.O_NONBLOCK)
             
@@ -48,7 +49,7 @@ class Pipes:
     def __exit__(self, exc_type, exc_value, traceback):
         os.close(self._fifo)
         os.remove(self._mainPath)
-        print("Tube supprimé ({}).".format(self._mainPath))
+        logging.debug("Tube supprimé ({}).".format(self._mainPath))
         
     def readMessage(self):
         s = bytearray()
@@ -76,7 +77,7 @@ class Pipes:
                 os.close(ctrl)
                 return
             except FileNotFoundError:
-                print("Attention ! Tube nommé {} introuvable, réessai {}".format(path, i))
+                logging.debug("Attention ! Tube nommé {} introuvable, réessai dans 10 sec {}".format(path, i))
                 time.sleep(10);
                 continue                
         
@@ -107,7 +108,7 @@ class PipesModule(Pipes):
         super().__init__("/tmp/{}".format(name))
         
     def record(self):
-        print("Enregistrement de {} auprès de /tmp/control".format(self._moduleName));
+        logging.debug("Enregistrement de {} auprès de /tmp/control".format(self._moduleName));
         self.writeMessage('/tmp/control', { 'verbe': 'hello', 'source': self._moduleName, 'path': self._mainPath } )
 
 if __name__ == "__main__":
