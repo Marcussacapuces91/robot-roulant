@@ -4,6 +4,7 @@
 from pipes import PipesModule
 import logging
 logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.WARNING)
 
 def finir(obj):
     logging.debug("Arrêt commandé du Module deplacement.")

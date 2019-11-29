@@ -5,6 +5,7 @@ from pipes import PipesControl
 #import subprocess
 import logging
 logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.WARNING)
 
 class Control:
     def __init__(self, labels):
