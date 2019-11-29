@@ -8,12 +8,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Control:
     def __init__(self, labels):
+        logging.debug("Démarrage de Controle")
         self._pipes = PipesControl()
         self._recordAllModules(labels)
     
     def __del__(self):
         self._stopAllModules()
-
+        logging.debug("Arrêt de Contrôle")
+        
     def _recordAllModules(self, labels):
         self._pipes.__enter__()
         self._modules = dict()
@@ -38,17 +40,18 @@ class Control:
                 
 
     def _stopAllModules(self):
-        for k, m in self._modules.items():
+        for m in self._modules:
             logging.debug("Commande d'arrêt du module {}".format(m))
-            self._pipes.writeMessage(m['path'], { 'source': 'controle', 'verbe': 'fin' })
-
+            self._pipes.writeMessage(self._modules[m]['path'], { 'source': 'controle', 'verbe': 'fin' })
         self._pipes.__exit__(None, None, None)
     
-
+    def initAll(self):
+        for m in self._modules:
+            logging.debug("Commande d'initialisation du module {}".format(m))
+            self._pipes.writeMessage(self._modules[m]['path'], { 'source': 'controle', 'verbe': 'init' })
 
 if __name__ == "__main__":
-    logging.debug("Démarrage de Controle")
     control = Control([ 'deplacement' ])
+    control.initAll()
 
     control = None
-    logging.debug("Arrêt de Contrôle")
