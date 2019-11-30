@@ -1,76 +1,55 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
-import io
-import json
 
-class Pipes:
-    """
-    Définit et met en oeuvre la communication au travers de tubes nommés.
-    Peut s'utiliser avec "with".
-    """
+from pipes import PipesModule
+import logging
+logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.WARNING)
+from espeakng import ESpeakNG
 
-    def __init__(self, path):
-        self._mainPath = path
-        
-    def __enter__(self):
-        self._createPipe(self._mainPath)
-        self._fifo = os.open(self._mainPath, os.O_RDONLY | os.O_NONBLOCK)
-        return self
+    
+def direTout():
+    esng = ESpeakNG(voice='fr')
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        os.close(self._fifo)
-        self._deletePipe(self._mainPath)
-        
-    def getMainPath(self):
-        return self._mainPath
+    esng.say('Bonjour.', sync=True)
+    s = 'Bienvenue a la mediatheque '
+    esng.say(s + '.', sync=True)
+   
 
-    def _createPipe(self, path):
-        try:
-            os.mkfifo(path)
-            print("Tube créé ({})".format(path))
-        except FileExistsError:
-            print("Tube déjà existant ({}).".format(path))
+    
+def finir(obj):
+    logging.debug("Arrêt commandé du Module synthese.")
+    exit(0)
+    
+def parler(obj):
+    logging.debug("Commande PARLER.")
 
-    def _deletePipe(self, path):
-        os.remove(path)
-        print("Tube supprimé ({}).".format(path))
-        
-    def readMessage(self):
-        s = bytearray()
-        while True:
-            try:
-                s.append(os.read(self._fifo, 1)[0])
-                dec = json.loads(s)
-                return dec
+def init(obj):
+    logging.debug("Commande d'initialisation du module.")
+    esng = ESpeakNG(voice='fr')
 
-            except IndexError:                 # os.read empty
-                return None
-            
-            except BlockingIOError as err:
-                if err.errno == 11:           # Resource temporarily unavailable
-                    return None
-            
-            except json.JSONDecodeError:       # json invalide
-                pass
-            
+    s = 'Bienvenue à la mediatheque '
+    esng.say(s, sync=True)
+    
 if __name__ == "__main__":
-    modules = dict()
-    with Pipes("/tmp/controle") as pipes:
+    logging.debug("Démarrage du module synthese.")
+    esng = ESpeakNG()
+#print(esng.voices) 
+    
+    with PipesModule("synthese") as pipes:
+        pipes.record()
         while True:
-            r = pipes.readMessage()
-            if r:
+            obj = pipes.readMessage()
+            if obj:
+                logging.debug("Message reçu : {}".format(obj))
                 try:
-                    if (r['verbe'] == "hello"):
-                        modules[r['source']] = { 'path': r['path'] }
+                    switcher = {
+                        'fin': finir,
+                        'init': init,
+                        'parler': parler
+                    }[obj['verbe']](obj)
                 except KeyError:
-                    print("Message ignoré (", end='')
-                    print(r, end='')
-                    print(") !")
+                    logging.warning("Commande inattendue, message ignoré ({}) !".format(obj))
                     continue
                 
-                print(modules)
-                
-#            else:
-#                break
