@@ -7,16 +7,6 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 #logging.basicConfig(level=logging.WARNING)
 from espeakng import ESpeakNG
-
-    
-def direTout():
-    esng = ESpeakNG(voice='fr')
-
-    esng.say('Bonjour.', sync=True)
-    s = 'Bienvenue a la mediatheque '
-    esng.say(s + '.', sync=True)
-   
-
     
 def finir(obj):
     logging.debug("Arrêt commandé du Module synthese.")
@@ -24,12 +14,13 @@ def finir(obj):
     
 def parler(obj):
     logging.debug("Commande PARLER.")
+    esng = ESpeakNG(voice='fr',speed=150,volume=10,pitch=90)
+    esng.say(obj['phrase'], sync=True)
 
 def init(obj):
     logging.debug("Commande d'initialisation du module.")
-    esng = ESpeakNG(voice='fr')
-
-    s = 'Bienvenue à la mediatheque '
+    esng = ESpeakNG(voice='fr',speed=150)
+    s = 'Bienvenue a la mediatheque Marie Curie de Saint-Michel ! '
     esng.say(s, sync=True)
     
 if __name__ == "__main__":
