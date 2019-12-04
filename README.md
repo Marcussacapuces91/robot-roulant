@@ -1,20 +1,3 @@
-# Robot Roulant
-
-
-Dans cette version (initiale), l'ensemble des modules sont développés sous la forme d'applications Python autonomes qui communiquent au travers de « Tubes Nommés », cette architecture n'interdit pas que les modules puissent utiliser d'autres languages ou technologies.
-
-Un composant spécifique dit **Système de Contrôle** assure une fonction de cerveau et coordonne le fonctionnement des autres modules au-travers de messages échangés. Chaque module déploie un tube nommé portant son nom et y lit les messages émis par le **Système de Contrôle** indiquant des commandes qu'il doit exécuter. Les réponses sont transmises directement au **Système de Contrôle**.
-
-## Système de Contrôle
-
-## Module de Déplacement
-
-## Module de Sythèse vocale
-
-## Module de reconnaissance de forme
-
----
-
 # Robot roulant
 
 Projet de développement d'un système autonome sous la forme d'une plateforme roulante qui pourra être équipée d'autres modules.
@@ -101,16 +84,18 @@ Nous utilisons [SemVer](https://semver.org/lang/fr/) pour le versionnage. Vous t
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Marc Sibert** - *travail initial* - [Marcussacapuces91](https://github.com/Marcussacapuces91) - Fablab [Lab'Allen](https://lab-allen.fr)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+Voir la liste des contributeurs [contributors](https://github.com/Marcussacapuces91/robot-roulant/contributors) ayant participé à ce projet.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+Ce projet est placé sous licence Apache V2 - Voir le fichier [LICENSE.md](LICENSE.md) pour les détails.
 
-## Acknowledgments
+## Remerciements
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* L'équipe de la Médiathèque de Saint-Michel-sur-Orge qui a soutenu ce projet et Malek en particulier 
+* Tous les participants aux ateliers qui ont développés 
+* Différentes sources d'inspiration, comme :
+** Gaël LANGEVIN – French InMoov designer - [InMoov.fr](https://inmoov.fr)
+                                      
