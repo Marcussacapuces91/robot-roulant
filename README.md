@@ -22,61 +22,41 @@ Pour fonctionner, il vous faudra :
 
 Note : à date, les modules Python ne fonctionnent pas sur environnements Windows car il ne supporte pas la fonction os.mkfifo.
 
-```
-Give examples
-```
-
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+Détail pas à pas de l'installation du projet pour assurer son développement.
 
-Say what the step will be
+@TODO À faire !
 
-```
-Give the example
-```
+## Lancer les tests
 
-And repeat
+Pour le moment aucun système de test n'a été mis en place.
 
-```
-until finished
-```
+## Déploiment
 
-End with an example of getting some data out of the system or using it for a little demo
+Pour déployer ce projet sur une Raspberry PI toute fraiche, il vous faudra :
 
-## Running the tests
+1. Une Raspbian neuve complète : Raspbian Buster with desktop and recommended software (version Sept. 2019)
+   https://www.raspberrypi.org/downloads/raspbian/
+2. Se connecter avec le compte Pi et se placer dans le "home" : cd ~
+3. Cloner le répertoire présent : git clone https://github/Marcussacapuces91/robot-roulant
+4. Au besoin, flasher le code dans l'Arduino Nano après avoir installé l'IDE Arduino.
+5. Installer espeak-ng :
+** sudo apt-get install -y espeak-ng
+6. Installer des compléments Python avec pip :
+** pip3 install py-espeak-ng
+** pip3 install pyserial
+7. Lancer successivement les modules avec la commande unique : ./start.sh
 
-Explain how to run the automated tests for this system
+C'est tout !
 
-### Break down into end to end tests
+## Construit avec
 
-Explain what these tests test and why
+Pas de dépendance à un autre framework.
 
-```
-Give an example
-```
+## Contribuer
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Merci de lire le manifeste [CONTRIBUTING.md](https://github.com/Marcussacapuces91/robot-roulant/blob/master/CONTRIBUTING.md) [en] pour avoir les détails de notre code de conduite, et le processus pour nous soumettre des demandes de modifications (/pull requests/).
 
 ## Versionnage
 
@@ -98,4 +78,6 @@ Ce projet est placé sous licence Apache V2 - Voir le fichier [LICENSE.md](LICEN
 * Tous les participants aux ateliers qui ont développés 
 * Différentes sources d'inspiration, comme :
 ** Gaël LANGEVIN – French InMoov designer - [InMoov.fr](https://inmoov.fr)
-                                      
+
+---
+Ce document est tiré de https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
