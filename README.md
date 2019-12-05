@@ -38,15 +38,15 @@ Pour déployer ce projet sur une Raspberry PI toute fraiche, il vous faudra :
 
 1. Une Raspbian neuve complète : Raspbian Buster with desktop and recommended software (version Sept. 2019)
    https://www.raspberrypi.org/downloads/raspbian/
-2. Se connecter avec le compte Pi et se placer dans le "home" : cd ~
-3. Cloner le répertoire présent : git clone https://github/Marcussacapuces91/robot-roulant
+2. Se connecter avec le compte Pi et se placer dans le "home" : `cd ~`
+3. Cloner le répertoire présent : `git clone https://github/Marcussacapuces91/robot-roulant`
 4. Au besoin, flasher le code dans l'Arduino Nano après avoir installé l'IDE Arduino.
 5. Installer espeak-ng :
-** sudo apt-get install -y espeak-ng
+   * `sudo apt-get install -y espeak-ng`
 6. Installer des compléments Python avec pip :
-** pip3 install py-espeak-ng
-** pip3 install pyserial
-7. Lancer successivement les modules avec la commande unique : ./start.sh
+   * `pip3 install py-espeak-ng`
+   * `pip3 install pyserial`
+7. Lancer successivement les modules avec la commande unique : `./start.sh`
 
 C'est tout !
 
@@ -56,7 +56,7 @@ Pas de dépendance à un autre framework.
 
 ## Contribuer
 
-Merci de lire le manifeste [CONTRIBUTING.md](https://github.com/Marcussacapuces91/robot-roulant/blob/master/CONTRIBUTING.md) [en] pour avoir les détails de notre code de conduite, et le processus pour nous soumettre des demandes de modifications (/pull requests/).
+Merci de lire le manifeste [CONTRIBUTING.md](CONTRIBUTING.md) [en] pour avoir les détails de notre code de conduite, et le processus pour nous soumettre des demandes de modifications (*pull requests*).
 
 ## Versionnage
 
@@ -77,7 +77,9 @@ Ce projet est placé sous licence Apache V2 - Voir le fichier [LICENSE.md](LICEN
 * L'équipe de la Médiathèque de Saint-Michel-sur-Orge qui a soutenu ce projet et Malek en particulier 
 * Tous les participants aux ateliers qui ont développés 
 * Différentes sources d'inspiration, comme :
-** Gaël LANGEVIN – French InMoov designer - [InMoov.fr](https://inmoov.fr)
+  * Gaël LANGEVIN – French InMoov designer - [InMoov.fr](https://inmoov.fr)
+  * Omron et son robot mobile : https://industrial.omron.fr/fr/products/mobile-robot
+  * Knapp : https://www.knapp.com/fr/solutions/technologies/robotique-et-manutention/
 
 ---
 Ce document est tiré de https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
