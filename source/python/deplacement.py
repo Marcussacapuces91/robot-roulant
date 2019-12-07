@@ -5,6 +5,7 @@ from pipes import PipesModule
 import logging
 logging.basicConfig(level=logging.DEBUG)
 #logging.basicConfig(level=logging.WARNING)
+import serial 
 
 def finir(obj):
     logging.debug("Arrêt commandé du Module deplacement.")
@@ -15,7 +16,15 @@ def avancer(obj):
 
 def init(obj):
     logging.debug("Commande d'initialisation du module.")
+   
+    with serial.Serial('/dev/ttyUSB0', 115200, timeout=1) as ser:
+        for i in range(10):
+            ser.write("A 1000\n\r".encode())
+            print(ser.readline())
             
+            ser.write("R 2000\n\r".encode())
+            print(ser.readline())
+       
 if __name__ == "__main__":
     logging.debug("Démarrage du module deplacement.")
     with PipesModule("deplacement") as pipes:
