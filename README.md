@@ -68,9 +68,9 @@ Nous utilisons [SemVer](https://semver.org/lang/fr/) pour le versionnage. Vous t
 
 Voir la liste des contributeurs [contributors](https://github.com/Marcussacapuces91/robot-roulant/contributors) ayant participé à ce projet.
 
-## License
+## Licence
 
-Ce projet est placé sous licence Apache V2 - Voir le fichier [LICENSE.md](LICENSE.md) pour les détails.
+Ce projet est placé sous licence Apache V2 - Voir le fichier [LICENSE](LICENSE) pour les détails.
 
 ## Remerciements
 
