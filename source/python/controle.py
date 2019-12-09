@@ -30,7 +30,7 @@ class Control:
                         self._modules[r['source']] = { 'path': r['path'] }
                         logging.debug("Enregistrement du module {} avec le tube nommé {}.".format(r['source'], r['path']))
                         l.remove(r['source'])
-                        break
+                        continue
                         
                 except KeyError:
                     logging.warning("Message ignoré ({}).".format(r))
@@ -50,9 +50,14 @@ class Control:
         for m in self._modules:
             logging.debug("Commande d'initialisation du module {}".format(m))
             self._pipes.writeMessage(self._modules[m]['path'], { 'source': 'controle', 'verbe': 'init' })
+            
+    def parler(self, phrase):
+        self._pipes.writeMessage('/tmp/synthese', {'source': 'controle', 'verbe': 'parler', 'phrase': phrase } )
 
 if __name__ == "__main__":
-    control = Control([ 'deplacement' ])
+    control = Control([ 'deplacement','synthese' ])
     control.initAll()
+    control.parler("Bonjour à tous les participants de l'atelier")
+    control.parler("Desole pour le bruit que nous faisons, mais c'est tellement drole !")
 
     control = None
