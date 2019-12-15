@@ -20,6 +20,8 @@
 #import json
 #import time
 import logging
+import pickle
+import paho.mqtt.client as mqtt
 
 class MQTTAbstract:
     """
@@ -36,7 +38,34 @@ class MQTTAbstract:
     def __init__(self, path, id):
         self._path = path
         self._client = mqtt.Client(client_id=id, clean_session=True)
+        try:
+            self._client.connect(self._MQTTHost, self._MQTTPort)
+        except ConnectionRefusedError as e:
+            logging.error("Connexion refusée ! ({})".format(e))
+            raise
+        self._client.loop_start()
+        self._client.user_data_set(self)
+        self._client.on_message = self._on_message
+        self._client.subscribe(path, qos=2)
+        
+    def __del__(self):
+        self._client.loop_stop()
+        self._client.disconnect()    
 
+    def _on_message(mqttc, obj, msg):
+        print(pickle.loads(msg.payload))
+        print(msg.mid)
+
+    def readMessage(self):
+        return None
+    
+    def writeMessage(self, path, mes):
+        info = self._client.publish(path, pickle.dumps(mes), qos=2)
+        if info.rc != 0:
+            logging.warning( mqtt.error_string(info.rc) )
+
+        logging.debug( "Message {} enregistré.".format(info.mid) )
+    
 class MQTTControl(MQTTAbstract):
     """
     C'est la classe concrête destinée au Contrôleur.
@@ -46,21 +75,18 @@ class MQTTControl(MQTTAbstract):
     """
     
     def __init__(self):
-        super().__init__(_pathControler, "controler")
+        logging.debug("Connection du contrôleur.")
+        super().__init__(self._pathControler, "controler")
         
-    def __enter__(self):
-        try:
-            logging.debug("Connection du contrôleur.")
-            client.connect(_MQTTHost, _MQTTPort)
-            client.loop_start()
-#            client.on_message = on_message
-            client.subscribe(_pathControler, qos=2)
-        except ConnectionRefusedError as e:
-            logging.error("Connexion refusée ! ({})".format(e))
-            raise
-        return self
+        self.writeMessage(self._pathControler, {
+            'source': "deplacement",
+            'verbe': "hello",
+            'path': "/robot-roulant/deplacement"
+        })
+        self.writeMessage(self._pathControler, {
+            'source': "synthese",
+            'verbe': "hello",
+            'path': "/robot-roulant/synthese"
+        })
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        client.loop_stop()
-        client.disconnect()    
-    
+        

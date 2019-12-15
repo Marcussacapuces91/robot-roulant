@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from pipes import PipesControl
+#from pipes import PipesControl
+from mqtt import MQTTControl
 #import subprocess
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -10,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG)
 class Control:
     def __init__(self, labels):
         logging.debug("Démarrage de Controle")
-        self._pipes = PipesControl()
+        self._mqtt = MQTTControl()
         self._recordAllModules(labels)
     
     def __del__(self):
@@ -18,12 +19,11 @@ class Control:
         logging.debug("Arrêt de Contrôle")
         
     def _recordAllModules(self, labels):
-        self._pipes.__enter__()
         self._modules = dict()
         logging.debug("Enregistrement des modules...")
         l = list(labels)
         while l:
-            r = self._pipes.readMessage()
+            r = self._mqtt.readMessage()
             if r:
                 try:
                     if (r['verbe'] == "hello"):
@@ -43,16 +43,16 @@ class Control:
     def _stopAllModules(self):
         for m in self._modules:
             logging.debug("Commande d'arrêt du module {}".format(m))
-            self._pipes.writeMessage(self._modules[m]['path'], { 'source': 'controle', 'verbe': 'fin' })
-        self._pipes.__exit__(None, None, None)
+            self._mqtt.writeMessage(self._modules[m]['path'], { 'source': 'controle', 'verbe': 'fin' })
+        self._mqtt.__exit__(None, None, None)
     
     def initAll(self):
         for m in self._modules:
             logging.debug("Commande d'initialisation du module {}".format(m))
-            self._pipes.writeMessage(self._modules[m]['path'], { 'source': 'controle', 'verbe': 'init' })
+            self._mqtt.writeMessage(self._modules[m]['path'], { 'source': 'controle', 'verbe': 'init' })
             
     def parler(self, phrase):
-        self._pipes.writeMessage('/tmp/synthese', {'source': 'controle', 'verbe': 'parler', 'phrase': phrase } )
+        self._mqtt.writeMessage('/tmp/synthese', {'source': 'controle', 'verbe': 'parler', 'phrase': phrase } )
 
 if __name__ == "__main__":
     control = Control([ 'deplacement','synthese' ])
