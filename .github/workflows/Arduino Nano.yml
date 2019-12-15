@@ -21,7 +21,7 @@ jobs:
         # parameter of type arduino-platform, in this case a
         # total of 2.
 #        arduino-platform: ["arduino:samd", "arduino:avr"]
-        arduino-platform: ["arduino:avr:nano"]
+        arduino-platform: ["arduino:avr"]
         # This is usually optional but we need to statically define the
         # FQBN of the boards we want to test for each platform. In the
         # future the CLI might automatically detect and download the core
@@ -32,8 +32,8 @@ jobs:
           # variable fqbn is set to "arduino:samd:nano_33_iot".
           - arduino-platform: "arduino:samd"
             fqbn: "arduino:samd:nano_33_iot"
-          - arduino-platform: "arduino:avr:nano"
-            fqbn: "arduino:avr:nano"
+          - arduino-platform: "arduino:avr"
+            fqbn: "arduino:avr:uno"
  
     # This is the platform GitHub will use to run our workflow, we
     # pick Windows for no particular reason.
