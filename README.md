@@ -17,10 +17,9 @@ Voir aussi le paragraphe "Déploiement" où est expliqué comment déployer le p
 Pour fonctionner, il vous faudra :
 * une carte Raspberry Pi 3 (mais ça peut fonctionner sur une autre version) ;
 * un Arduino Nano (le code peut être adapté à une autre carte).
-* installer Python 3 ;
+* installer Python 3, s'il n'y est pas déjà ;
+* installer Mosquitto (https://mosquitto.org/download/), ou avoir accès à une instance ;
 * installer l'IDE Arduino 1.8 depuis le site Arduino ;
-
-Note : à date, les modules Python ne fonctionnent pas sur environnements Windows car il ne supporte pas la fonction os.mkfifo.
 
 ### Installing
 
@@ -40,6 +39,7 @@ Pour déployer ce projet sur une Raspberry PI toute fraiche, il vous faudra :
    https://www.raspberrypi.org/downloads/raspbian/
 2. Se connecter avec le compte Pi et se placer dans le "home" : `cd ~`
 3. Cloner le répertoire présent : `git clone https://github/Marcussacapuces91/robot-roulant`
+4. Configurer la destination du serveur MQTT (Mosquitto) dans le fichier https://github.com/Marcussacapuces91/robot-roulant/blob/Bascule-vers-MQTT/source/python/mqtt.py#L26
 4. Au besoin, flasher le code dans l'Arduino Nano après avoir installé l'IDE Arduino.
 5. Installer espeak-ng :
    * `sudo apt-get install -y espeak-ng`
