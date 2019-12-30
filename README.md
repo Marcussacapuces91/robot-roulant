@@ -18,7 +18,7 @@ Pour fonctionner, il vous faudra :
 * une carte Raspberry Pi 3 (mais ça peut fonctionner sur une autre version) ;
 * un Arduino Nano (le code peut être adapté à une autre carte).
 * installer Python 3, s'il n'y est pas déjà ;
-* installer Mosquitto (https://mosquitto.org/download/), ou avoir accès à une instance ;
+* installer Mosquitto (https://mosquitto.org/download/), ou avoir accès à une instance distante, comme http://www.hivemq.com/demos/websocket-client/ ;
 * installer l'IDE Arduino 1.8 depuis le site Arduino ;
 
 ### Installing
